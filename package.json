@@ -17,6 +17,12 @@
   },
   "homepage": "https://github.com/Vented5/HunterRequisitionsManager-Back#readme",
   "dependencies": {
-    "express": "^4.19.2"
+    "@prisma/client": "^5.14.0",
+    "express": "^4.19.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.10.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.15.0"
   }
 }
