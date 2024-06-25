@@ -2,8 +2,36 @@ const express = require("express");
 const hrm = express();
 const port = 3010;
 
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+hrm.use(express.json());
+hrm.use(express.urlencoded());
+
 hrm.get('/', (req, res) => {
     res.send('Wenas nocheees!');
+});
+
+hrm.get('/requisitions', async (req, res) => {
+    const requisition = await prisma.requisitons.findFirst({
+        where: {
+            id: 1,
+        }
+    });
+    console.log(requisition);
+    await prisma.$disconnect();
+    res.send(requisition);
+});
+
+hrm.get('/users', async (req, res) => {
+    const users = await prisma.users.findFirst({
+        where: {
+            id: 1,
+        }
+    });
+    console.log(users);
+    await prisma.$disconnect();
+    res.send(users);
 });
 
 hrm.listen(port, () => {

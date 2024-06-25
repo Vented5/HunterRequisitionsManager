@@ -1,8 +1,14 @@
+# environmental files
+.env
+
 # npm
 node_modules
 # package-lock.json
 *.log
 *.gz
+
+# prisma files
+# prisma/
 
 # Coveralls
 .nyc_output
