@@ -13,6 +13,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Requisitons {
+  id Int @id @default(autoincrement())
+  status String @db.VarChar(20)
+  createdAt DateTime @default(now())
+  validatedAt DateTime?
+  total Int 
+  requisitor Users @relation("requested",fields: [requisitorId], references: [id])
+  requisitorId Int
+  //validator Users? @relation("validated", fields: [validatorId], references: [id])
+  //validatorId Int?
+}
+
 model Users {
   id Int @id @default(autoincrement())
   name String? 
@@ -35,17 +47,7 @@ model Budgets {
   updatedAt DateTime
 }
 
-model Requisitons {
-  id Int @id @default(autoincrement())
-  status String @db.VarChar(20)
-  createdAt DateTime @default(now())
-  validatedAt DateTime?
-  total Int 
-  requisitor Users @relation("requested",fields: [requisitorId], references: [id])
-  requisitorId Int
-  //validator Users? @relation("validated", fields: [validatorId], references: [id])
-  //validatorId Int?
-}
+
 
 model Items {
   id Int @id @default(autoincrement())

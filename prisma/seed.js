@@ -2,35 +2,48 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-    const alice = await prisma.users.upsert({
-        where: { id: 1 },
-        update: {},
-        create: {
+  
+    const dummyusers = await prisma.users.createMany({
+        data: [{
             name: 'Alice',
             pwd: 'wenas',
             email: 'alice@zaner.x',
             role: 'user',
             accessLvl: 2,
-            requisitions: {
-                /* create: [
-                    {
-                        //validatorId: 1,
-                        validatedAt: null,
-                        status: 'validated',
-                        total: 500,
-                    }
-                ] */
-            }
-        },
-    })
+        },{
+            name: 'derek',
+            email: 'derek@test.si',
+            accessLvl: 2,
+            role: 'Admin',
+            pwd: 'wenas',
+        },{
+            name: 'Elysus',
+            role: 'validator',
+            accessLvl: 3,
+            email: 'elysus@test.si',
+            pwd: 'wenas'
+        }]
+    });
     
-    const req1 = await prisma.requisitons.create({
-        data: {
-            status: 'requested',
-            total: 500,
-            requisitorId: 1,
-        }
-    })
+    const dummyRequisitions = await prisma.requisitons.createMany({
+        data: [
+            {
+           
+                status: 'requested',
+                total: 500,
+                requisitorId: 1,
+            },
+            {
+                status: 'validated',
+                total: 1500,
+                requisitorId: 2,
+            },{
+                status: 'denied',
+                total: 20000,
+                requisitorId: 3,
+            }
+        ]
+    });
     
     //console.log({alice, req1});
     console.log(await prisma.users.findFirst({
@@ -38,6 +51,8 @@ async function main() {
             id: 1,
         }
     }));
+
+    
 }
 main()
     .then(async() => {
