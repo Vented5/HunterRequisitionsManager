@@ -15,25 +15,30 @@ datasource db {
 
 model Requisitons {
   id Int @id @default(autoincrement())
-  status String @db.VarChar(20)
+  status String @db.VarChar(20) @default("requested")
   createdAt DateTime @default(now())
   validatedAt DateTime?
   total Int 
   requisitor Users @relation("requested",fields: [requisitorId], references: [id], onDelete: Cascade)
   requisitorId Int
-  //validator Users? @relation("validated", fields: [validatorId], references: [id])
-  //validatorId Int?
+  description String?
+  justification String?
+  provider Providers? @relation(fields: [providerId], references: [id])
+  providerId Int?
+  validator Users? @relation("validated", fields: [validatorId], references: [id])
+  validatorId Int?
 }
 
 model Users {
   id Int @id @default(autoincrement())
-  name String? 
-  pwd String?
+  name String 
+  pwd String
   email String @unique
-  role String?
+  role String @default("Admin")
   accessLvl Int
   requisitions Requisitons[] @relation("requested")
-  //validated Requisitons[] @relation("validated")
+  budgets Budgets[]
+  validated Requisitons[] @relation("validated")
 }
 
 model Departments{
@@ -43,8 +48,12 @@ model Departments{
 
 model Budgets {
   id Int @id @default(autoincrement())
+  name String @default("First quarter")
   ammount Int
-  updatedAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+  creator Users @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId Int 
 }
 
 
@@ -60,7 +69,8 @@ model Providers {
   name String?
   email String?
   website String?
-  pgone Int
+  phone Int
+  requisitions Requisitons[]
 }
 
 model Categories {
