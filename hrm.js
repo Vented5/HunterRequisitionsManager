@@ -13,7 +13,7 @@ const corsOptions = {
 
 //routes
 hrm.use(morgan('short')) //shows al request in console
-hrm.use('/users', require('./routes/user-routes'))
+hrm.use('/users', cors(corsOptions), require('./routes/user-routes'))
 hrm.use('/requisitions', cors(corsOptions), require('./routes/requisitions-routes')) 
 hrm.use('/auth', cors(corsOptions), require('./routes/auth-routes'))
 
