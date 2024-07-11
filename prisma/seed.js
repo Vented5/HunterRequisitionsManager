@@ -6,7 +6,7 @@ async function main() {
     const dummyusers = await prisma.users.createMany({
         data: [{
             name: 'Alice',
-            pwd: 'wenas',
+            pwd: '$2b$10$uJ.k6CGDH/DXSxtvqkgdKu17bRkdXRhQ5JiQnhlzrf6132izSUIvq',
             email: 'alice@zaner.x',
             role: 'user',
             accessLvl: 2,
@@ -15,13 +15,13 @@ async function main() {
             email: 'derek@test.si',
             accessLvl: 2,
             role: 'Admin',
-            pwd: 'wenas',
+            pwd: '$2b$10$uJ.k6CGDH/DXSxtvqkgdKu17bRkdXRhQ5JiQnhlzrf6132izSUIvq',
         },{
             name: 'Elysus',
             role: 'validator',
             accessLvl: 3,
             email: 'elysus@test.si',
-            pwd: 'wenas'
+            pwd: '$2b$10$uJ.k6CGDH/DXSxtvqkgdKu17bRkdXRhQ5JiQnhlzrf6132izSUIvq'
         }]
     });
     
