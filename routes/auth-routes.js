@@ -13,6 +13,17 @@ const prisma = new PrismaClient()
 
 router.use(express.json());
 
+router.get('/:token', async(req, res) => {
+    const token = jwt.decode(req.params.token)
+    const user = await prisma.users.findUnique({
+        where: { id: token.id }
+    })
+    console.log(token)
+    console.log(user)
+    res.status(200).json({ session: user })
+})
+
+
 router.post('/', async(req, res) => {
     const { email, pwd } = req.body
     //Verificacion del usuario
@@ -30,11 +41,11 @@ router.post('/', async(req, res) => {
                 const token = jwt.sign({ id: 1, username: 'zaner' }, SECRET_KEY, { expiresIn: '1h' });  
                 res.cookie('auth_token', token, {
                 httpOnly: false,
-                secure: false,
-                sameSite: 'None',
+                secure: true,
+                sameSite: 'none',
                 maxAge: 3600,     
                 path: '/'
-                }).status(200).json({ message: 'Conexión exitosa con la API' });
+                }).status(200).json({ message: 'Conexión exitosa con la API', user: existingUser, token: token});
             } else {
                 // Contraseña incorrecta
                 res.status(401).json({ message: 'Contraseña incorrecta' });
@@ -52,7 +63,7 @@ router.post('/logout', (req, res) => {
     res.clearCookie('auth_token', {
         httpOnly: false,
             secure: false,
-            sameSite: 'None',
+            sameSite: 'lax',
             maxAge: 3600,     
             path: '/'
     })
