@@ -81,7 +81,7 @@ router.patch('/:id', async (req, res) => {
     })
     //if(user){
     try{
-        const updateUser = await prisma.users.update({
+         await prisma.users.update({
             where: {
                 id: parseInt(req.params.id)
             },

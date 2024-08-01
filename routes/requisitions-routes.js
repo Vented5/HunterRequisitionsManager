@@ -4,7 +4,7 @@ const router = express.Router()
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
-//router.use(express.json());
+router.use(express.json());
 //router.use(express.urlencoded());
 
 
@@ -80,5 +80,27 @@ router.get('/:id', async (req, res) => {
     res.send(requisition)
 })
 
+router.patch('/:id', async (req, res) => {
+    const selectedRequest = req.body
+    /*await prisma.requisitons.findUnique({
+        where: {
+            id: parseInt(req.params.id)
+        }
+    })*/
+
+    try {
+        await prisma.requisitons.update({
+            where: {
+                id: parseInt(req.params.id)
+            }, data: {
+                status: selectedRequest.status
+            }
+        
+        })
+        res.status(200).send(selectedRequest)
+    } catch(e) {
+        console.log(e)
+    }
+})
 
 module.exports = router
