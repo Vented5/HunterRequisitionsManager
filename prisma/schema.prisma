@@ -30,8 +30,17 @@ model Requisitons {
   validatorId Int?
   department Departments? @relation(fields: [departmentId], references: [id])
   departmentId Int?
-  category Categories? @relation(fields: [categoryId], references: [id])
-  categoryId Int? 
+  itemList ItemsLists[]
+}
+
+model ItemsLists {
+  id Int @id @default(autoincrement())
+  quantity Int
+  price Float
+  itemId Int 
+  requisitionId Int
+  requisition Requisitons @relation(fields: [requisitionId], references: [id]) 
+  item Items @relation(fields: [itemId], references: [id])
 }
 
 model Users {
@@ -66,8 +75,11 @@ model Budgets {
 
 model Items {
   id Int @id @default(autoincrement())
-  name String?
-  price Int
+  name String
+  price Float
+  category Categories? @relation(fields: [categoryId], references: [id])
+  categoryId Int? 
+  itemList ItemsLists[]
 }
 
 model Providers {
@@ -82,7 +94,7 @@ model Providers {
 model Categories {
   id Int @id @default(autoincrement())
   name String?
-  requisitions Requisitons[]
+  items Items[]
 }
 
 model Inventories {

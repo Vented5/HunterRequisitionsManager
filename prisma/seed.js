@@ -7,6 +7,8 @@ async function main() {
     await prisma.departments.deleteMany();
     await prisma.providers.deleteMany();
     await prisma.categories.deleteMany();
+    await prisma.items.deleteMany();
+    await prisma.itemsLists.deleteMany();
 
     const dummyusers = await prisma.users.createMany({
         data: [{
@@ -83,47 +85,67 @@ async function main() {
         ]
     })
 
+    const items = await prisma.items.createMany({
+        data: [
+            { id: 1, name: 'Gansitos', price: 20.00, categoryId: 1},
+            { id: 2, name: 'Panuchos', price: 45.00, categoryId: 1},
+            { id: 3, name: 'Esquites', price: 70.00, categoryId: 1},
+            { id: 4, name: 'Nvidia Gt-3060', price: 5349.00, categoryId: 2}
+        ]
+    })
+
     const dummyRequisitions = await prisma.requisitons.createMany({
         data: [
             {
                 id: 1,
-                status: 'requested',
-                total: 500,
+                total: 4000,
                 requisitorId: 1,
                 departmentId: 1,
                 description: 'Idk... i need 500 gansitos',
                 dueDate: '2024-07-19T18:00:00.000Z',
                 justification: 'why not?',
                 providerId: 1,
-                categoryId: 1, 
             },
             {
                 id: 2,
-                status: 'validated',
                 total: 1500,
                 requisitorId: 2,
                 departmentId: 2,
-                description: '20 gt3060 and a cold coke',
+                description: '5 gt3060 and a cold coke',
                 dueDate: '2024-07-19T18:00:00.000Z',
                 justification: 'The project manager got the sugar down',
                 providerId: 2,
-                categoryId: 3,
             },{
                 id: 3,
-                status: 'denied',
-                total: 20000,
+                total: 95,
                 requisitorId: 3,
                 departmentId: 3,
-                description: '300g of spacial brownies',
+                description: '300g of spacial panuchos',
                 dueDate: '2024-07-19T18:00:00.000Z',
                 justification: 'I want to smell colors',
                 providerId: 1,
-                categoryId: 2
+            },
+            {
+                id: 4,
+                total: 70,
+                requisitorId: 3,
+                departmentId: 3,
+                description: 'Medio litro de elote con papas',
+                dueDate: '2024-07-19T18:00:00.000Z',
+                justification: 'I want to smell colors',
+                providerId: 1,
             }
         ]
     });
 
-    
+    const itemsList = await prisma.itemsLists.createMany({
+        data: [
+            { id: 1, quantity: 5, price: 25000, itemId: 4, requisitionId: 2},
+            { id: 2, quantity: 200, price: 4000, itemId: 1, requisitionId: 1},
+            { id: 3, quantity: 2, price: 95, itemId: 2, requisitionId: 3},
+            { id: 4, quantity: 1, price: 70, itemId: 3, requisitionId: 4},
+        ]
+    })    
 
 }
 main()
