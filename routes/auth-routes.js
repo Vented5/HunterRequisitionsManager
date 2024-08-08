@@ -38,7 +38,7 @@ router.post('/', async(req, res) => {
                 res.status(500).json({ message: 'Error interno del servidor' });
               } else if (result) {
                 //Creacion del token
-                const token = jwt.sign({ id: 1, username: 'zaner' }, SECRET_KEY, { expiresIn: '1h' });  
+                const token = jwt.sign({ id: existingUser.id, username: existingUser.name }, SECRET_KEY, { expiresIn: '1h' });  
                 res.cookie('auth_token', token, {
                 httpOnly: false,
                 secure: true,
@@ -50,8 +50,8 @@ router.post('/', async(req, res) => {
                 // Contraseña incorrecta
                 res.status(401).json({ message: 'Contraseña incorrecta' });
             }
-        })        
-        console.log("El usuario existe")    
+        })     
+           
     } else {
         res.status(401).json({ message: 'El usuario no existe'})
         console.log("El usuario no existe")

@@ -9,7 +9,7 @@ router.use(express.json());
 //router.use(express.urlencoded());
 
 router.post('/', async (req, res) => {
-    //console.log("req.body: " , req.body)
+    console.log("req.body: " , req.body)
     
     const newItems = req.body.itemLists
     console.log("newItems: ", newItems)
@@ -94,6 +94,12 @@ router.get('/', async (req, res) => {
                     name: true
                 }
             },
+            validator: {
+                select: {
+                    name: true,
+                    role: true
+                }
+            }
         }
     })
     await prisma.$disconnect()
@@ -140,6 +146,7 @@ router.get('/:id', async (req, res) => {
 
 
 router.patch('/:id', async (req, res) => {
+    console.log("req.body", req.body)
     const selectedRequest = req.body
     /*await prisma.requisitons.findUnique({
         where: {
@@ -152,10 +159,19 @@ router.patch('/:id', async (req, res) => {
             where: {
                 id: parseInt(req.params.id)
             }, data: {
-                status: selectedRequest.status
+                status: selectedRequest.status,
             }
-        
         })
+        if(selectedRequest.validatorId) {
+            await prisma.requisitons.update({
+                where: {
+                    id: parseInt(req.params.id)
+                }, data: {
+                    validatorId: selectedRequest.validatorId 
+                }
+            })
+        }
+        
         res.status(200).send(selectedRequest)
     } catch(e) {
         console.log(e)

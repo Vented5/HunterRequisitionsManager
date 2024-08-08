@@ -24,9 +24,9 @@ model Requisitons {
   description String?
   dueDate DateTime?
   justification String?
-  provider Providers? @relation(fields: [providerId], references: [id])
+  provider Providers? @relation(fields: [providerId], references: [id], onDelete: Cascade)
   providerId Int?
-  validator Users? @relation("validated", fields: [validatorId], references: [id])
+  validator Users? @relation("validated", fields: [validatorId], references: [id], onDelete: Cascade)
   validatorId Int?
   department String?
   //department Departments? @relation(fields: [departmentId], references: [id])
@@ -41,7 +41,7 @@ model Items {
   category String?
   quantity Int
   requisitionId Int
-  requisition Requisitons @relation(fields: [requisitionId], references: [id]) 
+  requisition Requisitons @relation(fields: [requisitionId], references: [id], onDelete: Cascade) 
 }
 
 model Users {
@@ -51,7 +51,7 @@ model Users {
   email String @unique
   role String @default("Admin")
   accessLvl Int
-  requisitions Requisitons[] @relation("requested")
+  requisitions Requisitons[] @relation("requested") 
   budgets Budgets[]
   validated Requisitons[] @relation("validated")
 }
