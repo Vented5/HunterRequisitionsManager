@@ -8,17 +8,10 @@ router.use(express.json());
 
 // Busca las listas de una requisision en especifico
 router.get('/:id', async (req, res) => {
-    const itemsLists = await prisma.itemsLists.findMany({
+    const itemsLists = await prisma.items.findMany({
         where: {
             requisitionId: parseInt(req.params.id) 
         },
-        include: {
-            item: {
-                include: {
-                    category: true
-                }
-            }
-        }
     })
     res.status(200).json(itemsLists)
 })

@@ -9,45 +9,55 @@ router.use(express.json());
 //router.use(express.urlencoded());
 
 router.post('/', async (req, res) => {
-    console.log(req.body)
-    try {
-        const transaction = await prisma.requisitons.create({
-            data: {
-                total: 500,
-                requisitorId: req.body.requestor,
-                description: req.body.description,
-                dueDate: "2024-07-19T18:00:00.000Z",
-                justification: req.body.justification,
-                providerId: 1,
-                departmentId: 1,
-            }
-        })
-        const newRequest = await prisma.requisitons.findUnique({
-            where: { id: transaction.id },
-            include: {
-                requisitor: {
-                    select: {
-                        name: true
-                    }
-                },
-                department: {
-                    select: {
-                        name: true
-                    }
-                },
-                provider: {
-                    select: {
-                        name: true
-                    }
-                },
-            }
-        })
-        console.log(transaction)
-        res.status(200).json({ requisition: newRequest, message: 'Requisision creada con exito' })
+    //console.log("req.body: " , req.body)
     
-    } catch(e) {
-        res.status(422).json({message: 'Error al crear requisision'})
-    }
+    const newItems = req.body.itemLists
+    console.log("newItems: ", newItems)
+    
+    const newRequest = await prisma.requisitons.create({
+        data: {
+            total: 500,
+            requisitorId: req.body.requestor,
+            description: req.body.description,
+            dueDate: "2024-07-19T18:00:00.000Z",
+            justification: req.body.justification,
+            providerId: 1,
+            department: req.body.department,
+        }
+    })
+    const createdRequest = await prisma.requisitons.findUnique({
+        where: { id: newRequest.id },
+        include: {
+            requisitor: {
+                select: {
+                    name: true
+                }
+            },
+            provider: {
+                select: {
+                    name: true
+                }
+            },
+        }
+    })
+
+    newItems.map(async (item) => {
+        const createdItem = await prisma.items.create({
+            data: {
+                name: item.name,
+                price: item.price,
+                category: item.category,
+                quantity: item.quantity,
+                requisitionId: createdRequest.id,
+            }
+        })
+    })
+        
+    
+
+        console.log("newRequest: ", newRequest)
+        res.status(200).json({ requisition: createdRequest, message: 'Requisision creada con exito' })
+    
     
 })
 
@@ -60,11 +70,11 @@ router.get('/', async (req, res) => {
                     name: true
                 }
             },
-            department: {
+            /*department: {
                 select: {
                     name: true
                 }
-            },
+            },*/
             provider: {
                 select: {
                     name: true
@@ -87,11 +97,11 @@ router.get('/validate', async (req, res) => {
                     name: true
                 }
             },
-            department: {
+            /*department: {
                 select: {
                     name: true
                 }
-            },
+            },*/
             provider: {
                 select: {
                     name: true
