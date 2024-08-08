@@ -2,6 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
+    await prisma.items.deleteMany()
     //wait prisma.itemsLists.deleteMany()
     await prisma.requisitons.deleteMany()
     await prisma.users.deleteMany()
@@ -9,7 +10,7 @@ async function main() {
     //await prisma.departments.deleteMany();
     await prisma.providers.deleteMany()
     //await prisma.categories.deleteMany()
-    await prisma.items.deleteMany()
+    
     
 
     const dummyusers = await prisma.users.createMany({

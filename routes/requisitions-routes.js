@@ -14,17 +14,41 @@ router.post('/', async (req, res) => {
     const newItems = req.body.itemLists
     console.log("newItems: ", newItems)
     
+    let total = 0
+
     const newRequest = await prisma.requisitons.create({
         data: {
-            total: 500,
+            total: 0,
             requisitorId: req.body.requestor,
             description: req.body.description,
-            dueDate: "2024-07-19T18:00:00.000Z",
+            dueDate: new Date(req.body.dueDate).toISOString(),
             justification: req.body.justification,
             providerId: 1,
             department: req.body.department,
         }
     })
+
+    newItems.map(async (item) => {
+        total = total + (item.price * item.quantity)
+        const createdItem = await prisma.items.create({
+            data: {
+                name: item.name,
+                price: item.price,
+                category: item.category,
+                quantity: item.quantity,
+                requisitionId: newRequest.id,
+            }
+        })
+    })
+
+    await prisma.requisitons.update({
+        where: { id: newRequest.id },
+        data: {
+            total: total
+        }
+
+    })
+
     const createdRequest = await prisma.requisitons.findUnique({
         where: { id: newRequest.id },
         include: {
@@ -41,22 +65,12 @@ router.post('/', async (req, res) => {
         }
     })
 
-    newItems.map(async (item) => {
-        const createdItem = await prisma.items.create({
-            data: {
-                name: item.name,
-                price: item.price,
-                category: item.category,
-                quantity: item.quantity,
-                requisitionId: createdRequest.id,
-            }
-        })
-    })
+    
         
     
 
-        console.log("newRequest: ", newRequest)
-        res.status(200).json({ requisition: createdRequest, message: 'Requisision creada con exito' })
+    console.log("newRequest: ", newRequest)
+    res.status(200).json({ requisition: createdRequest, message: 'Requisision creada con exito' })
     
     
 })
